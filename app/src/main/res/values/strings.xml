@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">VF-CAR</string>
+    <string name="clientes">Clientes</string>
+    <string name="vehiculos">Vehículos</string>
+    <string name="trabajadores">Trabajadores</string>
+    <string name="reparaciones">Reparaciones</string>
+    <string name="servicios">Servicios</string>
+</resources>
