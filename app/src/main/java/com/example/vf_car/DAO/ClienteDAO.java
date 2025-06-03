@@ -16,7 +16,7 @@ public class ClienteDAO {
         this.dbHelper = dbHelper;
     }
 
-    // Operación para insertar un nuevo cliente
+    // insertar un nuevo cliente
     public long insertCliente(Cliente cliente) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -26,7 +26,7 @@ public class ClienteDAO {
         return db.insert("cliente", null, values);
     }
 
-    // Operación para obtener todos los clientes
+    // obtener todos los clientes
     public List<Cliente> getAllClientes() {
         List<Cliente> listaClientes = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -49,7 +49,7 @@ public class ClienteDAO {
         return listaClientes;
     }
 
-    // Operación para actualizar un cliente
+    // actualizar un cliente
     public int updateCliente(Cliente cliente) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -60,20 +60,20 @@ public class ClienteDAO {
                 new String[]{String.valueOf(cliente.getId_cliente())});
     }
 
-    // Operación para eliminar un cliente
+    //  eliminar un cliente
     public int deleteCliente(int idCliente) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         return db.delete("cliente", "id_cliente=?",
                 new String[]{String.valueOf(idCliente)});
     }
 
-    // Operación para eliminar todos los clientes
+    // eliminar todos los clientes
     public int deleteAllClientes() {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         return db.delete("cliente", null, null);
     }
 
-    // Operación para buscar clientes por nombre, apellidos o teléfono
+    //  buscar clientes por nombre, apellidos o teléfono
     public List<Cliente> searchClientes(String query) {
         List<Cliente> filteredList = new ArrayList<>();
         String filterPattern = query.toLowerCase().trim();

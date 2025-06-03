@@ -92,7 +92,7 @@ public class ClientesActivity extends AppCompatActivity implements ClienteAdapte
             showDeleteConfirmationDialog(cliente);
         }
     }
-
+//ventana para crear nuevo cliente
     private void showAddClienteDialog() {
         try {
             View dialogView = getLayoutInflater().inflate(R.layout.dialog_cliente, null);
@@ -136,7 +136,7 @@ public class ClientesActivity extends AppCompatActivity implements ClienteAdapte
             Toast.makeText(this, "Error al mostrar diálogo: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
-
+//ventana para editar el cliente
     private void showEditClienteDialog(Cliente cliente) {
         try {
             View dialogView = getLayoutInflater().inflate(R.layout.dialog_cliente, null);
@@ -216,7 +216,7 @@ public class ClientesActivity extends AppCompatActivity implements ClienteAdapte
 
         return valido;
     }
-
+//confirmacion para eliminar el cliente
     private void showDeleteConfirmationDialog(Cliente cliente) {
         try {
             new AlertDialog.Builder(this)
@@ -283,6 +283,7 @@ public class ClientesActivity extends AppCompatActivity implements ClienteAdapte
         return super.onOptionsItemSelected(item);
     }
 
+    //eliminar todos los clientes
     private void showClearDatabaseDialog() {
         try {
             new AlertDialog.Builder(this)

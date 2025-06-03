@@ -50,14 +50,14 @@ public class MainActivity extends AppCompatActivity {
 
         // Botón Vehículos
         Button btnVehiculos = findViewById(R.id.btnVehiculos);
-//        btnVehiculos.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // Abrir actividad de Vehículos (debes crearla)
-//                Intent intent = new Intent(MainActivity.this, VehiculosActivity.class);
-//                startActivity(intent);
-//            }
-//        });
+        btnVehiculos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Abrir actividad de Vehículos (debes crearla)
+                Intent intent = new Intent(MainActivity.this, VehiculosActivity.class);
+                startActivity(intent);
+            }
+        });
 
         // Botón Trabajadores
         Button btnTrabajadores = findViewById(R.id.btnTrabajadores);

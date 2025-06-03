@@ -13,6 +13,9 @@
         android:theme="@style/Theme.VFCAR"
         tools:targetApi="31">
         <activity
+            android:name=".ACTIVITIES.VehiculosActivity"
+            android:exported="false" />
+        <activity
             android:name=".ACTIVITIES.ClientesActivity"
             android:exported="false" />
         <activity
