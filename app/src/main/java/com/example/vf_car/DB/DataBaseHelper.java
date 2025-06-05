@@ -40,22 +40,21 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         String CREATE_SERVICIO_TABLE = "CREATE TABLE servicio ("
                 + "id_servicio INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                 + "nombre    TEXT,\n"
-                + "descripcion    TEXT,\n"
-                + "precio_estimado  INTEGER\n"+
+                + "descripcion    TEXT\n"+
                 ");";
-        String CREATE_REPARACION_TABLE = "CREATE TABLE reparacion ("
+        String CREATE_REPARACION_TABLE = "CREATE TABLE reparaciones ("
                 + "id_reparacion INTEGER PRIMARY KEY AUTOINCREMENT,\n"
-                + "id_vehiculo    INTEGER,\n"
-                + "fecha_entrada  TEXT,\n"
-                + "fecha_salida  TEXT,\n"
-                + "estado  TEXT,\n"
-                + "observaciones  TEXT\n"+
-                ");";
+                + "id_vehiculo INTEGER,\n"
+                + "fecha TEXT,\n"
+                + "descripcion TEXT,\n"
+                + "horasTrabajo REAL,\n"
+                + "costoPorHora REAL,\n"
+                + "costoTotal REAL\n"
+                + ");";
         String CREATE_REPARACION_SERVICIO_TABLE = "CREATE TABLE reparacion_servicio ("
                 + "id_reparacion INTEGER,\n"
                 + "id_servicio    INTEGER,\n"
-                + "precio_real    INTEGER,\n"
-                + "tiempo_estimado  INTEGER\n"+
+                + "horas    INTEGER\n"+
                 ");";
         sqLiteDatabase.execSQL(CREATE_CLIENTE_TABLE);
         sqLiteDatabase.execSQL(CREATE_VEHICULO_TABLE);

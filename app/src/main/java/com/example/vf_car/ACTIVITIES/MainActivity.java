@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Botón Trabajadores
-        Button btnTrabajadores = findViewById(R.id.btnTrabajadores);
+//        Button btnTrabajadores = findViewById(R.id.btnTrabajadores);
 //        btnTrabajadores.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -70,26 +70,24 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-        // Botón Reparaciones
+     //    Botón Reparaciones
         Button btnReparaciones = findViewById(R.id.btnReparaciones);
-//        btnReparaciones.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // Abrir actividad de Reparaciones (debes crearla)
-//                Intent intent = new Intent(MainActivity.this, ReparacionesActivity.class);
-//                startActivity(intent);
-//            }
-//        });
+        btnReparaciones.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ReparacionesActivity.class);
+                startActivity(intent);
+            }
+        });
 
         // Botón Servicios
         Button btnServicios = findViewById(R.id.btnServicios);
-//        btnServicios.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // Abrir actividad de Servicios (debes crearla)
-//                Intent intent = new Intent(MainActivity.this, ServiciosActivity.class);
-//                startActivity(intent);
-//            }
-//        });
+        btnServicios.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ServicioActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }
