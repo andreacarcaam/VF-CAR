@@ -75,7 +75,7 @@ public class VehiculosActivity extends AppCompatActivity implements VehiculoAdap
     private void loadVehiculos() {
         try {
             listaVehiculos = vehiculoDAO.getAllVehiculos();
-            adapter = new VehiculoAdapter(listaVehiculos, this);
+            VehiculoAdapter adapter = new VehiculoAdapter(listaVehiculos, this, dbHelper);
             recyclerView.setAdapter(adapter);
         } catch (Exception e) {
             Toast.makeText(this, "Error al cargar vehículos: " + e.getMessage(), Toast.LENGTH_LONG).show();

@@ -5,4 +5,8 @@
     <string name="trabajadores">Trabajadores</string>
     <string name="reparaciones">Reparaciones</string>
     <string name="servicios">Servicios</string>
+    <string name="añadirReparacion">Crear Reparación</string>
+    <string name="reparacionesCompletadas">Reparaciones Completadas</string>
+    <string name="reparacionesPendientes">Reparaciones Pendientes</string>
+
 </resources>

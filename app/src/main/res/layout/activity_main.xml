@@ -62,20 +62,6 @@
                 android:layout_marginBottom="@dimen/button_margin"
                 android:text="@string/vehiculos" />
 
-            <!-- Botón Trabajadores -->
-            <Button
-                android:id="@+id/btnTrabajadores"
-                style="@style/AppButtonStyle"
-                android:layout_marginBottom="@dimen/button_margin"
-                android:text="@string/trabajadores" />
-
-            <!-- Botón Reparaciones -->
-            <Button
-                android:id="@+id/btnReparaciones"
-                style="@style/AppButtonStyle"
-                android:layout_marginBottom="@dimen/button_margin"
-                android:text="@string/reparaciones" />
-
             <!-- Botón Servicios -->
             <Button
                 android:id="@+id/btnServicios"

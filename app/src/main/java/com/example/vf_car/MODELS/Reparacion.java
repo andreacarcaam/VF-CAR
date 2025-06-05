@@ -7,14 +7,16 @@ public class Reparacion {
     private String fecha_salida;
     private String estado;
     private String observaciones;
+    private Boolean pagado;
 
-    public Reparacion(int id_reparacion, int id_vehiculo, String fecha_entrada, String fecha_salida, String estado, String observaciones) {
+    public Reparacion(int id_reparacion, int id_vehiculo, String fecha_entrada, String fecha_salida, String estado, String observaciones, Boolean pagado) {
         this.id_reparacion = id_reparacion;
         this.id_vehiculo = id_vehiculo;
         this.fecha_entrada = fecha_entrada;
         this.fecha_salida = fecha_salida;
         this.estado = estado;
         this.observaciones = observaciones;
+        this.pagado = pagado;
     }
 
     public int getId_reparacion() {
@@ -65,5 +67,12 @@ public class Reparacion {
 
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
+    }
+    public boolean isPagado() {
+        return pagado;
+    }
+
+    public void setPagada(boolean pagada) {
+        this.pagado = pagado;
     }
 }

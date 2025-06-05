@@ -40,8 +40,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         String CREATE_SERVICIO_TABLE = "CREATE TABLE servicio ("
                 + "id_servicio INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                 + "nombre    TEXT,\n"
-                + "descripcion    TEXT,\n"
-                + "precio_estimado  INTEGER\n"+
+                + "descripcion    TEXT\n"+
                 ");";
         String CREATE_REPARACION_TABLE = "CREATE TABLE reparacion ("
                 + "id_reparacion INTEGER PRIMARY KEY AUTOINCREMENT,\n"
@@ -49,7 +48,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 + "fecha_entrada  TEXT,\n"
                 + "fecha_salida  TEXT,\n"
                 + "estado  TEXT,\n"
-                + "observaciones  TEXT\n"+
+                + "observaciones  TEXT,\n"
+                + "pagado  INTEGER\n"+
                 ");";
         String CREATE_REPARACION_SERVICIO_TABLE = "CREATE TABLE reparacion_servicio ("
                 + "id_reparacion INTEGER,\n"

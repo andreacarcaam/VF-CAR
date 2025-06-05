@@ -103,4 +103,24 @@ public class ClienteDAO {
         }
         return filteredList;
     }
+    // En ClienteDAO.java
+    public Cliente getClienteById(int idCliente) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM cliente WHERE id_cliente = ?",
+                new String[]{String.valueOf(idCliente)});
+
+        Cliente cliente = null;
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                cliente = new Cliente(
+                        cursor.getInt(0),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getInt(3)
+                );
+            }
+            cursor.close();
+        }
+        return cliente;
+    }
 }

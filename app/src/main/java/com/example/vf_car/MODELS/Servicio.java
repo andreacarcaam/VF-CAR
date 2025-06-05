@@ -4,13 +4,12 @@ public class Servicio {
     private int id_servicio;
     private String nombre;
     private String descripcion;
-    private int precio;
 
-    public Servicio(String nombre, int id_servicio, String descripcion, int precio) {
+    public Servicio(String nombre, int id_servicio, String descripcion) {
         this.nombre = nombre;
         this.id_servicio = id_servicio;
         this.descripcion = descripcion;
-        this.precio = precio;
+
     }
 
     public int getId_servicio() {
@@ -37,11 +36,4 @@ public class Servicio {
         this.descripcion = descripcion;
     }
 
-    public int getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(int precio) {
-        this.precio = precio;
-    }
 }
