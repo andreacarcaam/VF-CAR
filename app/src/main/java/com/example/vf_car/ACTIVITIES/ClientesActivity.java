@@ -12,8 +12,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.vf_car.ADAPTERS.ClienteAdapter;
 import com.example.vf_car.DAO.ClienteDAO;
+import com.example.vf_car.DAO.VehiculoDAO;
 import com.example.vf_car.DB.DataBaseHelper;
 import com.example.vf_car.MODELS.Cliente;
+import com.example.vf_car.MODELS.Vehiculo;
 import com.example.vf_car.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -25,6 +27,7 @@ public class ClientesActivity extends AppCompatActivity implements ClienteAdapte
     private ClienteAdapter adapter;
     private DataBaseHelper dbHelper;
     private ClienteDAO clienteDAO;
+    private VehiculoDAO vehiculoDAO;
     private List<Cliente> listaClientes;
 
     @Override
@@ -36,6 +39,7 @@ public class ClientesActivity extends AppCompatActivity implements ClienteAdapte
             // Inicialización de componentes
             dbHelper = DataBaseHelper.getInstance(this);
             clienteDAO = new ClienteDAO(dbHelper);
+            vehiculoDAO = new VehiculoDAO(dbHelper);
 
             // Configurar Toolbar
             Toolbar toolbar = findViewById(R.id.toolbar);
@@ -70,7 +74,7 @@ public class ClientesActivity extends AppCompatActivity implements ClienteAdapte
     private void loadClientes() {
         try {
             listaClientes = clienteDAO.getAllClientes();
-            adapter = new ClienteAdapter(listaClientes, this);
+            adapter = new ClienteAdapter(listaClientes, this, vehiculoDAO);
             if (recyclerView != null) {
                 recyclerView.setAdapter(adapter);
             }
@@ -92,7 +96,10 @@ public class ClientesActivity extends AppCompatActivity implements ClienteAdapte
             showDeleteConfirmationDialog(cliente);
         }
     }
-//ventana para crear nuevo cliente
+
+
+
+
     private void showAddClienteDialog() {
         try {
             View dialogView = getLayoutInflater().inflate(R.layout.dialog_cliente, null);
@@ -136,7 +143,7 @@ public class ClientesActivity extends AppCompatActivity implements ClienteAdapte
             Toast.makeText(this, "Error al mostrar diálogo: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
-//ventana para editar el cliente
+
     private void showEditClienteDialog(Cliente cliente) {
         try {
             View dialogView = getLayoutInflater().inflate(R.layout.dialog_cliente, null);
@@ -216,7 +223,7 @@ public class ClientesActivity extends AppCompatActivity implements ClienteAdapte
 
         return valido;
     }
-//confirmacion para eliminar el cliente
+
     private void showDeleteConfirmationDialog(Cliente cliente) {
         try {
             new AlertDialog.Builder(this)
@@ -283,7 +290,6 @@ public class ClientesActivity extends AppCompatActivity implements ClienteAdapte
         return super.onOptionsItemSelected(item);
     }
 
-    //eliminar todos los clientes
     private void showClearDatabaseDialog() {
         try {
             new AlertDialog.Builder(this)
