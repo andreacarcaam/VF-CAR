@@ -3,16 +3,14 @@ package com.example.vf_car.MODELS;
 public class Reparacion {
     private int id_reparacion;
     private int id_vehiculo;
-    private int id_trabajador;
     private String fecha_entrada;
     private String fecha_salida;
     private String estado;
     private String observaciones;
 
-    public Reparacion(int id_reparacion, int id_vehiculo, int id_trabajador, String fecha_entrada, String fecha_salida, String estado, String observaciones) {
+    public Reparacion(int id_reparacion, int id_vehiculo, String fecha_entrada, String fecha_salida, String estado, String observaciones) {
         this.id_reparacion = id_reparacion;
         this.id_vehiculo = id_vehiculo;
-        this.id_trabajador = id_trabajador;
         this.fecha_entrada = fecha_entrada;
         this.fecha_salida = fecha_salida;
         this.estado = estado;
@@ -35,13 +33,7 @@ public class Reparacion {
         this.id_vehiculo = id_vehiculo;
     }
 
-    public int getId_trabajador() {
-        return id_trabajador;
-    }
 
-    public void setId_trabajador(int id_trabajador) {
-        this.id_trabajador = id_trabajador;
-    }
 
     public String getFecha_entrada() {
         return fecha_entrada;
