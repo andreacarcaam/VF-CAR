@@ -70,6 +70,7 @@ public class ReparacionesActivity extends AppCompatActivity implements Reparacio
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         recyclerView = findViewById(R.id.rvReparaciones);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

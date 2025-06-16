@@ -7,6 +7,15 @@
     android:background="?attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true">
+    <TextView
+        android:id="@+id/tvDescripcion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:maxLines="2"
+        android:textStyle="bold"
+        android:textColor="#2196F3"
+        android:ellipsize="end"/>
 
     <TextView
         android:id="@+id/tvFecha"
@@ -14,14 +23,6 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:textSize="16sp"/>
-
-    <TextView
-        android:id="@+id/tvDescripcion"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:maxLines="2"
-        android:ellipsize="end"/>
 
     <TextView
         android:id="@+id/tvServicios"
