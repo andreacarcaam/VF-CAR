@@ -12,6 +12,7 @@ import com.example.vf_car.MODELS.Reparacion;
 import com.example.vf_car.R;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class ReparacionAdapter extends RecyclerView.Adapter<ReparacionAdapter.ReparacionViewHolder> implements Filterable {
 
@@ -43,8 +44,7 @@ public class ReparacionAdapter extends RecyclerView.Adapter<ReparacionAdapter.Re
         Reparacion reparacion = reparacionesFiltradas.get(position);
         holder.tvFecha.setText(reparacion.getFecha());
         holder.tvDescripcion.setText(reparacion.getDescripcion());
-        holder.tvCosto.setText(String.format("$%.2f", reparacion.getCostoTotal()));
-
+        holder.tvCosto.setText(String.format(Locale.getDefault(), "%.2f€", reparacion.getCostoTotal()));
         holder.itemView.setOnClickListener(v -> listener.onReparacionClick(reparacion));
         holder.itemView.setOnLongClickListener(v -> {
             listener.onReparacionLongClick(reparacion);

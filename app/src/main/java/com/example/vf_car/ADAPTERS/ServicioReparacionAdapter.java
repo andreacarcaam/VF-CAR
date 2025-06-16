@@ -1,11 +1,15 @@
 package com.example.vf_car.ADAPTERS;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.vf_car.MODELS.Servicio;
 import com.example.vf_car.MODELS.ServicioReparacion;
@@ -15,11 +19,22 @@ import java.util.List;
 
 public class ServicioReparacionAdapter extends RecyclerView.Adapter<ServicioReparacionAdapter.ViewHolder> {
 
+    public interface HorasTotalesListener {
+        void onHorasTotalesChanged(double total);
+    }
+
     private List<Servicio> servicios;
     private List<ServicioReparacion> serviciosSeleccionados = new ArrayList<>();
+    private Context context;
+    private HorasTotalesListener horasTotalesListener;
 
-    public ServicioReparacionAdapter(List<Servicio> servicios) {
+    public ServicioReparacionAdapter(List<Servicio> servicios, Context context) {
         this.servicios = servicios;
+        this.context = context;
+    }
+
+    public void setHorasTotalesListener(HorasTotalesListener listener) {
+        this.horasTotalesListener = listener;
     }
 
     @Override
@@ -32,59 +47,85 @@ public class ServicioReparacionAdapter extends RecyclerView.Adapter<ServicioRepa
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Servicio servicio = servicios.get(position);
-        holder.cbServicio.setText(servicio.getNombre());
-        holder.etHoras.setEnabled(false);
+        holder.tvNombreServicio.setText(servicio.getNombre());
 
-        // Buscar si este servicio ya está seleccionado
-        ServicioReparacion servicioExistente = null;
-        for (ServicioReparacion sr : serviciosSeleccionados) {
-            if (sr.getIdServicio() == servicio.getId_servicio()) {
-                servicioExistente = sr;
-                break;
-            }
-        }
+        ServicioReparacion servicioExistente = findServicioSeleccionado(servicio.getId_servicio());
+        double horas = servicioExistente != null ? servicioExistente.getHoras() : 0;
+        holder.btnAsignarHoras.setText(horas > 0 ? String.format("%.2f horas", horas) : "Asignar horas");
 
-        // Configurar el estado inicial
+        holder.btnAsignarHoras.setOnClickListener(v -> showHorasDialog(servicio, holder));
+        holder.itemView.setOnClickListener(v -> showHorasDialog(servicio, holder));
+    }
+
+    private void showHorasDialog(Servicio servicio, ViewHolder holder) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_input_horas, null);
+        builder.setView(dialogView);
+
+        EditText etHoras = dialogView.findViewById(R.id.etHorasDialog);
+        ServicioReparacion servicioExistente = findServicioSeleccionado(servicio.getId_servicio());
+
         if (servicioExistente != null) {
-            holder.cbServicio.setChecked(true);
-            holder.etHoras.setEnabled(true);
-            holder.etHoras.setText(String.valueOf(servicioExistente.getHoras()));
-        } else {
-            holder.cbServicio.setChecked(false);
-            holder.etHoras.setEnabled(false);
-            holder.etHoras.setText("");
+            etHoras.setText(String.valueOf(servicioExistente.getHoras()));
         }
 
-        holder.cbServicio.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            holder.etHoras.setEnabled(isChecked);
-            if (isChecked) {
-                serviciosSeleccionados.add(new ServicioReparacion(servicio.getId_servicio(), 0));
-            } else {
-                serviciosSeleccionados.removeIf(sr -> sr.getIdServicio() == servicio.getId_servicio());
-            }
-        });
-
-        holder.etHoras.addTextChangedListener(new android.text.TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-            @Override
-            public void afterTextChanged(android.text.Editable s) {
-                try {
-                    double horas = s.toString().isEmpty() ? 0 : Double.parseDouble(s.toString());
-                    for (ServicioReparacion sr : serviciosSeleccionados) {
-                        if (sr.getIdServicio() == servicio.getId_servicio()) {
-                            sr.setHoras(horas);
-                            break;
+        AlertDialog dialog = builder.setTitle("Horas para " + servicio.getNombre())
+                .setPositiveButton("Guardar", (d, which) -> {
+                    try {
+                        String horasText = etHoras.getText().toString();
+                        if (!horasText.isEmpty()) {
+                            double horas = Double.parseDouble(horasText);
+                            if (horas > 0) {
+                                updateServicio(servicio.getId_servicio(), horas);
+                                holder.btnAsignarHoras.setText(String.format("%.2f horas", horas));
+                                notifyHorasTotalesChanged();
+                            } else {
+                                removeServicio(servicio.getId_servicio());
+                                holder.btnAsignarHoras.setText("Asignar horas");
+                                notifyHorasTotalesChanged();
+                            }
                         }
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(context, "Ingrese un valor válido", Toast.LENGTH_SHORT).show();
                     }
-                } catch (NumberFormatException e) {
-                }
+                })
+                .setNegativeButton("Cancelar", null)
+                .create();
+
+        dialog.show();
+
+        // Mostrar teclado automáticamente
+        etHoras.postDelayed(() -> {
+            etHoras.requestFocus();
+            InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.showSoftInput(etHoras, InputMethodManager.SHOW_IMPLICIT);
             }
-        });
+        }, 200);
+    }
+
+    private void notifyHorasTotalesChanged() {
+        if (horasTotalesListener != null) {
+            horasTotalesListener.onHorasTotalesChanged(getHorasTotales());
+        }
+    }
+
+    private void updateServicio(int idServicio, double horas) {
+        removeServicio(idServicio);
+        serviciosSeleccionados.add(new ServicioReparacion(idServicio, horas));
+    }
+
+    private void removeServicio(int idServicio) {
+        serviciosSeleccionados.removeIf(sr -> sr.getIdServicio() == idServicio);
+    }
+
+    private ServicioReparacion findServicioSeleccionado(int idServicio) {
+        for (ServicioReparacion sr : serviciosSeleccionados) {
+            if (sr.getIdServicio() == idServicio) {
+                return sr;
+            }
+        }
+        return null;
     }
 
     public double getHorasTotales() {
@@ -105,13 +146,13 @@ public class ServicioReparacionAdapter extends RecyclerView.Adapter<ServicioRepa
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public CheckBox cbServicio;
-        public EditText etHoras;
+        public TextView tvNombreServicio;
+        public Button btnAsignarHoras;
 
         public ViewHolder(View view) {
             super(view);
-            cbServicio = view.findViewById(R.id.cbServicio);
-            etHoras = view.findViewById(R.id.etHoras);
+            tvNombreServicio = view.findViewById(R.id.tvNombreServicio);
+            btnAsignarHoras = view.findViewById(R.id.btnAsignarHoras);
         }
     }
 }

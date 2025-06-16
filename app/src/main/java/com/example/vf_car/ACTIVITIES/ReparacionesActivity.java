@@ -1,10 +1,15 @@
 package com.example.vf_car.ACTIVITIES;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -105,13 +110,18 @@ public class ReparacionesActivity extends AppCompatActivity implements Reparacio
                     double costoPorHora = Double.parseDouble(etCostoPorHora.getText().toString());
 
                     if (validarCampos(vehiculo, fecha, descripcion, costoPorHora)) {
+                        hideKeyboard(etCostoPorHora);
+
                         Reparacion nuevaReparacion = new Reparacion();
                         nuevaReparacion.setId_vehiculo(vehiculo.getId_vehiculo());
                         nuevaReparacion.setFecha(fecha);
                         nuevaReparacion.setDescripcion(descripcion);
                         nuevaReparacion.setCostoPorHora(costoPorHora);
-                        showAddServiciosDialog(nuevaReparacion);
-                        dialog.dismiss();
+
+                        new Handler().postDelayed(() -> {
+                            showAddServiciosDialog(nuevaReparacion);
+                            dialog.dismiss();
+                        }, 200);
                     }
                 } catch (NumberFormatException e) {
                     Toast.makeText(this, "Costo por hora inválido", Toast.LENGTH_SHORT).show();
@@ -123,41 +133,61 @@ public class ReparacionesActivity extends AppCompatActivity implements Reparacio
     }
 
     private void showAddServiciosDialog(Reparacion reparacion) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_servicios_reparacion, null);
+        builder.setView(dialogView);
+
         RecyclerView rvServicios = dialogView.findViewById(R.id.rvServicios);
         TextView tvHorasTotales = dialogView.findViewById(R.id.tvHorasTotales);
+        Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
+        Button btnGuardar = dialogView.findViewById(R.id.btnGuardar);
 
         List<Servicio> servicios = servicioDAO.getAllServicios();
-        ServicioReparacionAdapter adapter = new ServicioReparacionAdapter(servicios);
+        ServicioReparacionAdapter adapter = new ServicioReparacionAdapter(servicios, this);
         rvServicios.setAdapter(adapter);
         rvServicios.setLayoutManager(new LinearLayoutManager(this));
 
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("Asignar Horas a Servicios")
-                .setView(dialogView)
-                .setPositiveButton("Guardar", (d, which) -> {
-                    double horasTotales = adapter.getHorasTotales();
-                    if (horasTotales > 0) {
-                        reparacion.setHorasTrabajo(horasTotales);
-                        long idReparacion = reparacionDAO.insertReparacion(reparacion);
+        AlertDialog dialog = builder.create();
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-                        for (ServicioReparacion sr : adapter.getServiciosSeleccionados()) {
-                            reparacionDAO.insertServicioEnReparacion(
-                                    (int) idReparacion,
-                                    sr.getIdServicio(),
-                                    sr.getHoras()
-                            );
-                        }
-                        loadReparaciones();
-                    } else {
-                        Toast.makeText(this, "Debe asignar horas al menos a un servicio", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .setNegativeButton("Cancelar", null)
-                .create();
+        // Actualizar horas totales cuando cambien
+        adapter.setHorasTotalesListener(total -> {
+            tvHorasTotales.setText(String.format("Horas totales: %.2f", total));
+        });
+
+        btnCancelar.setOnClickListener(v -> dialog.dismiss());
+
+        btnGuardar.setOnClickListener(v -> {
+            double horasTotales = adapter.getHorasTotales();
+            if (horasTotales > 0) {
+                reparacion.setHorasTrabajo(horasTotales);
+                long idReparacion = reparacionDAO.insertReparacion(reparacion);
+
+                for (ServicioReparacion sr : adapter.getServiciosSeleccionados()) {
+                    reparacionDAO.insertServicioEnReparacion(
+                            (int) idReparacion,
+                            sr.getIdServicio(),
+                            sr.getHoras()
+                    );
+                }
+                loadReparaciones();
+                dialog.dismiss();
+            } else {
+                Toast.makeText(this, "Debe asignar horas al menos a un servicio", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         dialog.show();
     }
+
+
+    private void hideKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
 
     private boolean validarCampos(Vehiculo vehiculo, String fecha, String descripcion, double costoPorHora) {
         if (vehiculo == null) {
@@ -226,9 +256,11 @@ public class ReparacionesActivity extends AppCompatActivity implements Reparacio
 
     @Override
     public void onReparacionClick(Reparacion reparacion) {
+        // Implementar si es necesario
     }
 
     @Override
     public void onReparacionLongClick(Reparacion reparacion) {
+        // Implementar si es necesario
     }
 }

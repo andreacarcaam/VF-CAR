@@ -19,6 +19,12 @@
             android:name=".ACTIVITIES.ClientesActivity"
             android:exported="false" />
         <activity
+            android:name=".ACTIVITIES.ReparacionesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ACTIVITIES.ServicioActivity"
+            android:exported="false" />
+        <activity
             android:name=".ACTIVITIES.MainActivity"
             android:exported="true">
             <intent-filter>
