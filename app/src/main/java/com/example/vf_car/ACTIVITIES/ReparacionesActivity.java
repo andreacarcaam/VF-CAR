@@ -1,5 +1,6 @@
 package com.example.vf_car.ACTIVITIES;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,7 +33,10 @@ import com.example.vf_car.MODELS.Vehiculo;
 import com.example.vf_car.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
+
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class ReparacionesActivity extends AppCompatActivity implements ReparacionAdapter.OnReparacionClickListener {
 
@@ -89,6 +93,10 @@ public class ReparacionesActivity extends AppCompatActivity implements Reparacio
         TextInputEditText etDescripcion = dialogView.findViewById(R.id.etDescripcion);
         TextInputEditText etCostoPorHora = dialogView.findViewById(R.id.etCostoPorHora);
 
+        // Configurar el DatePickerDialog
+        etFecha.setFocusable(false); 
+        etFecha.setOnClickListener(v -> showDatePickerDialog(etFecha));
+
         ArrayAdapter<Vehiculo> adapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_spinner_item, listaVehiculos);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -131,7 +139,6 @@ public class ReparacionesActivity extends AppCompatActivity implements Reparacio
 
         dialog.show();
     }
-
     private void showAddServiciosDialog(Reparacion reparacion) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_servicios_reparacion, null);
@@ -207,6 +214,24 @@ public class ReparacionesActivity extends AppCompatActivity implements Reparacio
             return false;
         }
         return true;
+    }
+    private void showDatePickerDialog(TextInputEditText etFecha) {
+        final Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                this,
+                (view, selectedYear, selectedMonth, selectedDay) -> {
+                    // formato dd/MM/yyyy
+                    String formattedDate = String.format(Locale.getDefault(),
+                            "%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear);
+                    etFecha.setText(formattedDate);
+                },
+                year, month, day);
+
+        datePickerDialog.show();
     }
 
     @Override
