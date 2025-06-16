@@ -9,6 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.vf_car.MODELS.Reparacion;
+import com.example.vf_car.MODELS.Reparacion_servicio;
+import com.example.vf_car.MODELS.Servicio;
 import com.example.vf_car.R;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,8 @@ public class ReparacionAdapter extends RecyclerView.Adapter<ReparacionAdapter.Re
     private List<Reparacion> reparaciones;
     private List<Reparacion> reparacionesFiltradas;
     private OnReparacionClickListener listener;
+    private List<Reparacion_servicio> serviciosPorReparacion;
+    private List<Servicio> todosServicios;
 
     public interface OnReparacionClickListener {
         void onReparacionClick(Reparacion reparacion);
@@ -29,6 +33,11 @@ public class ReparacionAdapter extends RecyclerView.Adapter<ReparacionAdapter.Re
         this.reparaciones = reparaciones;
         this.reparacionesFiltradas = new ArrayList<>(reparaciones);
         this.listener = listener;
+    }
+    public void setServiciosData(List<Reparacion_servicio> serviciosReparacion, List<Servicio> servicios) {
+        this.serviciosPorReparacion = serviciosReparacion;
+        this.todosServicios = servicios;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -45,11 +54,41 @@ public class ReparacionAdapter extends RecyclerView.Adapter<ReparacionAdapter.Re
         holder.tvFecha.setText(reparacion.getFecha());
         holder.tvDescripcion.setText(reparacion.getDescripcion());
         holder.tvCosto.setText(String.format(Locale.getDefault(), "%.2f€", reparacion.getCostoTotal()));
+
+        StringBuilder serviciosText = new StringBuilder();
+        if (serviciosPorReparacion != null && todosServicios != null) {
+            for (Reparacion_servicio rs : serviciosPorReparacion) {
+                if (rs.getId_reparacion() == reparacion.getId_reparacion()) {
+
+                    String nombreServicio = getNombreServicio(rs.getId_servicio());
+                    serviciosText.append("• ")
+                            .append(nombreServicio)
+                            .append(" (")
+                            .append(rs.getHoras())
+                            .append(" horas)\n");
+                }
+            }
+        }
+
+        if (serviciosText.length() > 0) {
+            holder.tvServicios.setText(serviciosText.toString().trim());
+        } else {
+            holder.tvServicios.setText("No hay servicios asociados");
+        }
+
         holder.itemView.setOnClickListener(v -> listener.onReparacionClick(reparacion));
         holder.itemView.setOnLongClickListener(v -> {
             listener.onReparacionLongClick(reparacion);
             return true;
         });
+    }
+    private String getNombreServicio(int idServicio) {
+        for (Servicio servicio : todosServicios) {
+            if (servicio.getId_servicio() == idServicio) {
+                return servicio.getNombre();
+            }
+        }
+        return "Servicio desconocido";
     }
 
     @Override
@@ -91,19 +130,15 @@ public class ReparacionAdapter extends RecyclerView.Adapter<ReparacionAdapter.Re
         };
     }
 
-    public void updateList(List<Reparacion> newList) {
-        reparaciones = newList;
-        reparacionesFiltradas = new ArrayList<>(newList);
-        notifyDataSetChanged();
-    }
 
     static class ReparacionViewHolder extends RecyclerView.ViewHolder {
-        TextView tvFecha, tvDescripcion, tvCosto;
+        TextView tvFecha, tvDescripcion, tvServicios, tvCosto;
 
         public ReparacionViewHolder(@NonNull View itemView) {
             super(itemView);
             tvFecha = itemView.findViewById(R.id.tvFecha);
             tvDescripcion = itemView.findViewById(R.id.tvDescripcion);
+            tvServicios = itemView.findViewById(R.id.tvServicios);
             tvCosto = itemView.findViewById(R.id.tvCosto);
         }
     }

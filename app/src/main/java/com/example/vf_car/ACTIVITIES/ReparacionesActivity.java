@@ -38,6 +38,7 @@ import com.example.vf_car.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -82,7 +83,16 @@ public class ReparacionesActivity extends AppCompatActivity implements Reparacio
 
     private void loadReparaciones() {
         listaReparaciones = reparacionDAO.getAllReparaciones();
+        List<Servicio> todosServicios = servicioDAO.getAllServicios();
+
+        // Obtener todos los servicios de reparación
+        List<Reparacion_servicio> todosServiciosRep = new ArrayList<>();
+        for (Reparacion r : listaReparaciones) {
+            todosServiciosRep.addAll(reparacionDAO.getServiciosDeReparacion(r.getId_reparacion()));
+        }
+
         adapter = new ReparacionAdapter(listaReparaciones, this);
+        adapter.setServiciosData(todosServiciosRep, todosServicios);
         recyclerView.setAdapter(adapter);
     }
 
