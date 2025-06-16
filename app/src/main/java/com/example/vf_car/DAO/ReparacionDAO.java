@@ -26,12 +26,12 @@ public class ReparacionDAO {
         values.put("horasTrabajo", reparacion.getHorasTrabajo());
         values.put("costoPorHora", reparacion.getCostoPorHora());
         values.put("costoTotal", reparacion.getCostoTotal());
+        values.put("pagado", reparacion.isPagado() ? 1 : 0);
 
         long id = db.insert("reparaciones", null, values);
         db.close();
         return id;
     }
-
     public void insertServicioEnReparacion(int idReparacion, int idServicio, double horas) {
         db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -57,6 +57,7 @@ public class ReparacionDAO {
                         cursor.getDouble(4),
                         cursor.getDouble(5)
                 );
+                reparacion.setPagado(cursor.getInt(7) == 1);
                 reparaciones.add(reparacion);
             } while (cursor.moveToNext());
         }
@@ -123,9 +124,20 @@ public class ReparacionDAO {
         values.put("horasTrabajo", reparacion.getHorasTrabajo());
         values.put("costoPorHora", reparacion.getCostoPorHora());
         values.put("costoTotal", reparacion.getCostoTotal());
+        values.put("pagado", reparacion.isPagado() ? 1 : 0);
 
         int count = db.update("reparaciones", values, "id_reparacion = ?",
                 new String[]{String.valueOf(reparacion.getId_reparacion())});
+        db.close();
+        return count;
+    }
+    public int marcarComoPagado(int idReparacion, boolean pagado) {
+        db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("pagado", pagado ? 1 : 0);
+
+        int count = db.update("reparaciones", values, "id_reparacion = ?",
+                new String[]{String.valueOf(idReparacion)});
         db.close();
         return count;
     }

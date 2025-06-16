@@ -42,6 +42,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 + "nombre    TEXT,\n"
                 + "descripcion    TEXT\n"+
                 ");";
+
         String CREATE_REPARACION_TABLE = "CREATE TABLE reparaciones ("
                 + "id_reparacion INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                 + "id_vehiculo INTEGER,\n"
@@ -49,7 +50,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 + "descripcion TEXT,\n"
                 + "horasTrabajo REAL,\n"
                 + "costoPorHora REAL,\n"
-                + "costoTotal REAL\n"
+                + "costoTotal REAL,\n"
+                + "pagado INTEGER DEFAULT 0\n"
                 + ");";
         String CREATE_REPARACION_SERVICIO_TABLE = "CREATE TABLE reparacion_servicio ("
                 + "id_reparacion INTEGER,\n"

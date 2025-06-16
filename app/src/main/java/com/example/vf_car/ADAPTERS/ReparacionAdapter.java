@@ -3,15 +3,21 @@ package com.example.vf_car.ADAPTERS;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.vf_car.DAO.ReparacionDAO;
+import com.example.vf_car.DB.DataBaseHelper;
 import com.example.vf_car.MODELS.Reparacion;
 import com.example.vf_car.MODELS.Reparacion_servicio;
 import com.example.vf_car.MODELS.Servicio;
 import com.example.vf_car.R;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -26,6 +32,7 @@ public class ReparacionAdapter extends RecyclerView.Adapter<ReparacionAdapter.Re
 
     public interface OnReparacionClickListener {
         void onReparacionClick(Reparacion reparacion);
+
         void onReparacionLongClick(Reparacion reparacion);
     }
 
@@ -34,6 +41,7 @@ public class ReparacionAdapter extends RecyclerView.Adapter<ReparacionAdapter.Re
         this.reparacionesFiltradas = new ArrayList<>(reparaciones);
         this.listener = listener;
     }
+
     public void setServiciosData(List<Reparacion_servicio> serviciosReparacion, List<Servicio> servicios) {
         this.serviciosPorReparacion = serviciosReparacion;
         this.todosServicios = servicios;
@@ -54,6 +62,7 @@ public class ReparacionAdapter extends RecyclerView.Adapter<ReparacionAdapter.Re
         holder.tvFecha.setText(reparacion.getFecha());
         holder.tvDescripcion.setText(reparacion.getDescripcion());
         holder.tvCosto.setText(String.format(Locale.getDefault(), "%.2f€", reparacion.getCostoTotal()));
+        holder.cbPagado.setChecked(reparacion.isPagado());
 
         StringBuilder serviciosText = new StringBuilder();
         if (serviciosPorReparacion != null && todosServicios != null) {
@@ -81,7 +90,14 @@ public class ReparacionAdapter extends RecyclerView.Adapter<ReparacionAdapter.Re
             listener.onReparacionLongClick(reparacion);
             return true;
         });
+        holder.cbPagado.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            reparacion.setPagado(isChecked);
+            // Actualiza el estado en la base de datos
+            ReparacionDAO reparacionDAO = new ReparacionDAO(new DataBaseHelper(buttonView.getContext()));
+            reparacionDAO.marcarComoPagado(reparacion.getId_reparacion(), isChecked);
+        });
     }
+
     private String getNombreServicio(int idServicio) {
         for (Servicio servicio : todosServicios) {
             if (servicio.getId_servicio() == idServicio) {
@@ -133,6 +149,7 @@ public class ReparacionAdapter extends RecyclerView.Adapter<ReparacionAdapter.Re
 
     static class ReparacionViewHolder extends RecyclerView.ViewHolder {
         TextView tvFecha, tvDescripcion, tvServicios, tvCosto;
+        CheckBox cbPagado;
 
         public ReparacionViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -140,6 +157,7 @@ public class ReparacionAdapter extends RecyclerView.Adapter<ReparacionAdapter.Re
             tvDescripcion = itemView.findViewById(R.id.tvDescripcion);
             tvServicios = itemView.findViewById(R.id.tvServicios);
             tvCosto = itemView.findViewById(R.id.tvCosto);
+            cbPagado = itemView.findViewById(R.id.cbPagado);
         }
     }
 }
