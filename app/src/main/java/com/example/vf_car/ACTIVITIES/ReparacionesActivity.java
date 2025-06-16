@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
@@ -22,10 +23,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.vf_car.ADAPTERS.ReparacionAdapter;
 import com.example.vf_car.ADAPTERS.ServicioReparacionAdapter;
+import com.example.vf_car.DAO.ClienteDAO;
 import com.example.vf_car.DAO.ReparacionDAO;
 import com.example.vf_car.DAO.ServicioDAO;
 import com.example.vf_car.DAO.VehiculoDAO;
 import com.example.vf_car.DB.DataBaseHelper;
+import com.example.vf_car.MODELS.Cliente;
 import com.example.vf_car.MODELS.Reparacion;
 import com.example.vf_car.MODELS.Servicio;
 import com.example.vf_car.MODELS.ServicioReparacion;
@@ -94,11 +97,41 @@ public class ReparacionesActivity extends AppCompatActivity implements Reparacio
         TextInputEditText etCostoPorHora = dialogView.findViewById(R.id.etCostoPorHora);
 
         // Configurar el DatePickerDialog
-        etFecha.setFocusable(false); 
+        etFecha.setFocusable(false);
         etFecha.setOnClickListener(v -> showDatePickerDialog(etFecha));
 
-        ArrayAdapter<Vehiculo> adapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_spinner_item, listaVehiculos);
+        //spinner con  marca modelo matricula y cliente 
+        ArrayAdapter<Vehiculo> adapter = new ArrayAdapter<Vehiculo>(
+                this, android.R.layout.simple_spinner_item, listaVehiculos) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView textView = (TextView) view;
+                Vehiculo vehiculo = getItem(position);
+                Cliente cliente = new ClienteDAO(dbHelper).getClienteById(vehiculo.getId_cliente());
+
+                String clienteNombre = (cliente != null) ? cliente.getNombre() + " " + cliente.getApellidos() : "Cliente desconocido";
+                textView.setText(String.format("%s %s (%s) - %s",
+                        vehiculo.getMarca(),
+                        vehiculo.getModelo(),
+                        vehiculo.getMatricula(),
+                        clienteNombre));
+                return view;
+            }
+
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView textView = (TextView) view;
+                Vehiculo vehiculo = getItem(position);
+                Cliente cliente = new ClienteDAO(dbHelper).getClienteById(vehiculo.getId_cliente());
+
+                String clienteNombre = (cliente != null) ? cliente.getNombre() + " " + cliente.getApellidos() : "Cliente desconocido";
+                textView.setText(vehiculo.getMarca() + " " + vehiculo.getModelo() + " - " + clienteNombre);
+                return view;
+            }
+        };
+
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerVehiculos.setAdapter(adapter);
 
