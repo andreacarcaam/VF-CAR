@@ -94,4 +94,39 @@ public class ReparacionDAO {
         db.close();
         return count;
     }
+    public int deleteReparacion(int idReparacion) {
+        db = dbHelper.getWritableDatabase();
+
+        db.delete("reparacion_servicio", "id_reparacion = ?",
+                new String[]{String.valueOf(idReparacion)});
+
+        int count = db.delete("reparaciones", "id_reparacion = ?",
+                new String[]{String.valueOf(idReparacion)});
+
+        db.close();
+        return count;
+    }
+
+    public void deleteServiciosDeReparacion(int idReparacion) {
+        db = dbHelper.getWritableDatabase();
+        db.delete("reparacion_servicio", "id_reparacion = ?",
+                new String[]{String.valueOf(idReparacion)});
+        db.close();
+    }
+
+    public int updateReparacion(Reparacion reparacion) {
+        db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("id_vehiculo", reparacion.getId_vehiculo());
+        values.put("fecha", reparacion.getFecha());
+        values.put("descripcion", reparacion.getDescripcion());
+        values.put("horasTrabajo", reparacion.getHorasTrabajo());
+        values.put("costoPorHora", reparacion.getCostoPorHora());
+        values.put("costoTotal", reparacion.getCostoTotal());
+
+        int count = db.update("reparaciones", values, "id_reparacion = ?",
+                new String[]{String.valueOf(reparacion.getId_reparacion())});
+        db.close();
+        return count;
+    }
 }

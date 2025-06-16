@@ -22,6 +22,9 @@ public class Reparacion {
         this.costoTotal = horasTrabajo * costoPorHora;
     }
 
+    public void setCostoTotal(double costoTotal) {
+        this.costoTotal = costoTotal;
+    }
 
     public int getId_reparacion() { return id_reparacion; }
     public void setId_reparacion(int id_reparacion) { this.id_reparacion = id_reparacion; }

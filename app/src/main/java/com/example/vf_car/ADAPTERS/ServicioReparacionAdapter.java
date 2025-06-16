@@ -110,9 +110,10 @@ public class ServicioReparacionAdapter extends RecyclerView.Adapter<ServicioRepa
         }
     }
 
-    private void updateServicio(int idServicio, double horas) {
+    public void updateServicio(int idServicio, double horas) {
         removeServicio(idServicio);
         serviciosSeleccionados.add(new ServicioReparacion(idServicio, horas));
+        notifyHorasTotalesChanged();
     }
 
     private void removeServicio(int idServicio) {
@@ -145,6 +146,7 @@ public class ServicioReparacionAdapter extends RecyclerView.Adapter<ServicioRepa
         return servicios.size();
     }
 
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView tvNombreServicio;
         public Button btnAsignarHoras;
@@ -155,4 +157,5 @@ public class ServicioReparacionAdapter extends RecyclerView.Adapter<ServicioRepa
             btnAsignarHoras = view.findViewById(R.id.btnAsignarHoras);
         }
     }
+
 }
