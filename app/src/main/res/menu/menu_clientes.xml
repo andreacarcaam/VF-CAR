@@ -2,7 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- Ítem de búsqueda -->
     <item
         android:id="@+id/action_search"
         android:icon="@android:drawable/ic_menu_search"
@@ -10,11 +9,8 @@
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView"/>
 
-
-    <!-- Ítem para limpiar la base de datos -->
     <item
         android:id="@+id/action_clear_db"
         android:title="Limpiar datos"
         app:showAsAction="never"/>
-
 </menu>

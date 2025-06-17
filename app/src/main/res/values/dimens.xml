@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Pantalla -->
-    <dimen name="screen_padding">16dp</dimen>
+    <dimen name="screen_padding">8dp</dimen>
 
     <!-- Texto -->
     <dimen name="title_text_size">24sp</dimen>
 
     <!-- Botones -->
-    <dimen name="button_margin">16dp</dimen>
-    <dimen name="button_container_padding">8dp</dimen>
+    <dimen name="button_margin">8dp</dimen>
+    <dimen name="button_container_padding">16dp</dimen>
     <dimen name="button_min_height">48dp</dimen>
+
 </resources>

@@ -6,23 +6,24 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f0f0f0"
+    android:background="@drawable/gradient_background"
     android:padding="@dimen/screen_padding"
     tools:context=".ACTIVITIES.MainActivity">
 
-    <!-- Título (centrado y responsive) -->
-    <TextView
-        android:id="@+id/titleApp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        android:textColor="#000000"
-        android:textSize="@dimen/title_text_size"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <!-- Reemplazo del TextView por ImageView para el logo -->
+    <ImageView
+        android:id="@+id/logoApp"
+        android:layout_width="150dp"
+    android:layout_height="80dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:contentDescription="@string/app_name"
+    android:scaleType="fitCenter"
+    android:src="@drawable/logo"
+    app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Guía horizontal para separación (20% desde arriba) -->
     <androidx.constraintlayout.widget.Guideline
@@ -32,45 +33,59 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.20" />
 
-    <!-- Contenedor de botones (ScrollView para pantallas pequeñas) -->
-    <ScrollView
+    <!-- Resto del código permanece igual -->
+    <androidx.cardview.widget.CardView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:fillViewport="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/guideline_horizontal">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/button_container_padding">
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:background="#FFFFFF">
 
-            <!-- Botón Clientes -->
-            <Button
-                android:id="@+id/btnClientes"
-                style="@style/AppButtonStyle"
-                android:layout_marginBottom="@dimen/button_margin"
-                android:text="@string/clientes" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/button_container_padding">
 
-            <!-- Botón Vehículos -->
-            <Button
-                android:id="@+id/btnVehiculos"
-                style="@style/AppButtonStyle"
-                android:layout_marginBottom="@dimen/button_margin"
-                android:text="@string/vehiculos" />
+                <!-- Botón Clientes -->
+                <Button
+                    android:id="@+id/btnClientes"
+                    style="@style/AppButtonStyle.Yellow"
+                    android:layout_marginBottom="@dimen/button_margin"
+                    android:text="@string/clientes" />
 
-            <!-- Botón Servicios -->
-            <Button
-                android:id="@+id/btnServicios"
-                style="@style/AppButtonStyle"
-                android:text="@string/servicios" />
-            <Button
-                android:id="@+id/btnReparaciones"
-                style="@style/AppButtonStyle"
-                android:text="@string/reparaciones" />
-        </LinearLayout>
-    </ScrollView>
+                <!-- Botón Vehículos -->
+                <Button
+                    android:id="@+id/btnVehiculos"
+                    style="@style/AppButtonStyle.Yellow"
+                    android:layout_marginBottom="@dimen/button_margin"
+                    android:text="@string/vehiculos" />
+
+                <!-- Botón Servicios -->
+                <Button
+                    android:id="@+id/btnServicios"
+                    style="@style/AppButtonStyle.Yellow"
+                    android:layout_marginBottom="@dimen/button_margin"
+                    android:text="@string/servicios" />
+
+                <!-- Botón Reparaciones -->
+                <Button
+                    android:id="@+id/btnReparaciones"
+                    style="@style/AppButtonStyle.Yellow"
+                    android:text="@string/reparaciones" />
+            </LinearLayout>
+        </ScrollView>
+    </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
