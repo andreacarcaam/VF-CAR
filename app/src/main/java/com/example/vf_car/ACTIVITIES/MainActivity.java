@@ -89,5 +89,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        // Botón Estadísticas
+        Button btnEstadisticas = findViewById(R.id.btnEstadisticas);
+        btnEstadisticas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, StatsActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

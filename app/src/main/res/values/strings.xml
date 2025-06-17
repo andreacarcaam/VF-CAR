@@ -8,5 +8,5 @@
     <string name="añadirReparacion">Crear Reparación</string>
     <string name="reparacionesCompletadas">Reparaciones Completadas</string>
     <string name="reparacionesPendientes">Reparaciones Pendientes</string>
-
+    <string name="estadisticas">Estadísticas</string>
 </resources>
