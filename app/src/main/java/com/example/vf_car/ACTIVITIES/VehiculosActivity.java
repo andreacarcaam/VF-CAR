@@ -10,6 +10,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,7 +23,6 @@ import com.example.vf_car.MODELS.Vehiculo;
 import com.example.vf_car.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +34,7 @@ public class VehiculosActivity extends AppCompatActivity implements VehiculoAdap
     private VehiculoDAO vehiculoDAO;
     private ClienteDAO clienteDAO;
     private List<Vehiculo> listaVehiculos;
+    private List<Vehiculo> listaVehiculosCompleta;
     private List<Cliente> listaClientes;
     private int selectedClienteId = -1;
 
@@ -72,15 +73,18 @@ public class VehiculosActivity extends AppCompatActivity implements VehiculoAdap
             finish();
         }
     }
+
     private void loadVehiculos() {
         try {
             listaVehiculos = vehiculoDAO.getAllVehiculos();
-            VehiculoAdapter adapter = new VehiculoAdapter(listaVehiculos, this, dbHelper);
+            listaVehiculosCompleta = new ArrayList<>(listaVehiculos); // Copia de la lista completa
+            adapter = new VehiculoAdapter(listaVehiculos, this, dbHelper);
             recyclerView.setAdapter(adapter);
         } catch (Exception e) {
             Toast.makeText(this, "Error al cargar vehículos: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
+
     private void loadClientes() {
         try {
             listaClientes = clienteDAO.getAllClientes();
@@ -102,7 +106,7 @@ public class VehiculosActivity extends AppCompatActivity implements VehiculoAdap
             showDeleteConfirmationDialog(vehiculo);
         }
     }
-    //ventana para crear nuevo vehiculo
+
     private void showAddVehiculoDialog() {
         try {
             View dialogView = getLayoutInflater().inflate(R.layout.dialog_vehiculo, null);
@@ -170,7 +174,7 @@ public class VehiculosActivity extends AppCompatActivity implements VehiculoAdap
             Toast.makeText(this, "Error al mostrar diálogo: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
-//ventana para editar el vehiculo
+
     private void showEditVehiculoDialog(Vehiculo vehiculo) {
         try {
             View dialogView = getLayoutInflater().inflate(R.layout.dialog_vehiculo, null);
@@ -294,7 +298,6 @@ public class VehiculosActivity extends AppCompatActivity implements VehiculoAdap
 
         return valido;
     }
-//confirmacion para eliminar el vehiculo
 
     private void showDeleteConfirmationDialog(Vehiculo vehiculo) {
         try {
@@ -320,11 +323,11 @@ public class VehiculosActivity extends AppCompatActivity implements VehiculoAdap
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_vehiculos, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
-        androidx.appcompat.widget.SearchView searchView = (androidx.appcompat.widget.SearchView) searchItem.getActionView();
+        SearchView searchView = (SearchView) searchItem.getActionView();
 
         if (searchView != null) {
             searchView.setQueryHint("Buscar vehículos...");
-            searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
                     return false;
@@ -332,12 +335,39 @@ public class VehiculosActivity extends AppCompatActivity implements VehiculoAdap
 
                 @Override
                 public boolean onQueryTextChange(String newText) {
-                    filterVehiculos(newText);
+                    if (newText.isEmpty()) {
+                        // Restaurar lista completa cuando no hay texto
+                        adapter.updateList(new ArrayList<>(listaVehiculosCompleta));
+                    } else {
+                        // Filtrar la lista
+                        filterVehiculos(newText);
+                    }
                     return true;
                 }
             });
         }
         return true;
+    }
+
+    private void filterVehiculos(String query) {
+        try {
+            List<Vehiculo> filteredList = new ArrayList<>();
+            String lowerCaseQuery = query.toLowerCase().trim();
+
+            for (Vehiculo vehiculo : listaVehiculosCompleta) {
+                if (vehiculo.getMatricula().toLowerCase().contains(lowerCaseQuery) ||
+                        vehiculo.getMarca().toLowerCase().contains(lowerCaseQuery) ||
+                        vehiculo.getModelo().toLowerCase().contains(lowerCaseQuery) ||
+                        String.valueOf(vehiculo.getAno()).contains(lowerCaseQuery)) {
+
+                    filteredList.add(vehiculo);
+                }
+            }
+
+            adapter.updateList(filteredList);
+        } catch (Exception e) {
+            Toast.makeText(this, "Error al filtrar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -353,7 +383,7 @@ public class VehiculosActivity extends AppCompatActivity implements VehiculoAdap
         }
         return super.onOptionsItemSelected(item);
     }
-    //eliminar todos los vehiculos
+
     private void showClearDatabaseDialog() {
         try {
             new AlertDialog.Builder(this)
@@ -372,15 +402,6 @@ public class VehiculosActivity extends AppCompatActivity implements VehiculoAdap
                     .show();
         } catch (Exception e) {
             Toast.makeText(this, "Error al mostrar diálogo: " + e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private void filterVehiculos(String query) {
-        try {
-            List<Vehiculo> filteredList = vehiculoDAO.searchVehiculos(query);
-            adapter.updateList(filteredList);
-        } catch (Exception e) {
-            Toast.makeText(this, "Error al filtrar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
