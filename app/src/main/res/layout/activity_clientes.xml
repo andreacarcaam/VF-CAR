@@ -16,9 +16,9 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="#FFC107"
-
+            app:title="Gestión de Clientes"
             app:titleTextColor="@android:color/black" />
-        <!--            app:title="Gestión de Clientes"-->
+     
     </com.google.android.material.appbar.AppBarLayout>
 
 
